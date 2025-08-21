@@ -1,0 +1,24 @@
+{
+  "name": "clicker_duo_api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@types/sqlite3": "^3.1.11",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "redis": "^5.5.6",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3"
+  }
+}
