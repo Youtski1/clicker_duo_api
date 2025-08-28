@@ -7,4 +7,4 @@ RUN npm i
 
 EXPOSE 3001
 
-CMD ["npx", "ts-node", "src/index.ts"]
+CMD ["node", "dist/index.js"]
