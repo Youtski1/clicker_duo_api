@@ -13,23 +13,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const db_1 = require("../database/db");
 const user_service_1 = __importDefault(require("../services/model_service/user_service"));
+const db_1 = __importDefault(require("../../database/db"));
 const routerUser = (0, express_1.Router)();
 routerUser.post("/upsert_user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const db = yield (0, db_1.initDB)();
-    const database_service = new user_service_1.default(db);
+    const user_service = new user_service_1.default(db_1.default);
     const data = req.body;
     if (!data) {
         res.status(400).send("not body request");
         return;
     }
-    yield database_service.upsertUser(data.telegram_id, data.full_name, data.username);
+    yield user_service.upsertUser(data.telegram_id, data.full_name, data.username);
     res.status(201).send("update user data");
 }));
 routerUser.post("/upgrade_damage", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const db = yield (0, db_1.initDB)();
-    const user_service = new user_service_1.default(db);
+    const user_service = new user_service_1.default(db_1.default);
     const data = req.body;
     if (!data) {
         res.status(400).send("not body reqest");
@@ -38,8 +36,7 @@ routerUser.post("/upgrade_damage", (req, res) => __awaiter(void 0, void 0, void 
     res.status(200).send("successfully upgrade damage");
 }));
 routerUser.get("/get_top_users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const db = yield (0, db_1.initDB)();
-    const user_service = new user_service_1.default(db);
+    const user_service = new user_service_1.default(db_1.default);
     const top_users = yield user_service.getTopUsersByLevel();
     console.log("TOP: " + top_users);
     if (!top_users) {
@@ -49,8 +46,7 @@ routerUser.get("/get_top_users", (req, res) => __awaiter(void 0, void 0, void 0,
     res.status(200).json({ top_users: top_users });
 }));
 routerUser.get("/:telegram_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const db = yield (0, db_1.initDB)();
-    const database_service = new user_service_1.default(db);
+    const database_service = new user_service_1.default(db_1.default);
     const telegram_id = req.params.telegram_id;
     const user = yield database_service.getUser(parseInt(telegram_id, 10));
     if (!user) {

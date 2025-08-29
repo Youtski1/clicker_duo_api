@@ -1,9 +1,0 @@
-CREATE TABLE IF NOT EXISTS duos(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    owner_id INTEGER,
-    level INTEGER DEFAULT 1,
-    stage INTEGER DEFAULT 1,
-    health INTEGER DEFAULT 1200,
-    recovery_time DATE
-);
-

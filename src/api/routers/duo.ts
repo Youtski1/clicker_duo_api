@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { initDB } from "../database/db";
 import { Request, Response } from "express";
 import DuoService from "../services/model_service/duo_service";
 import UserService from "../services/model_service/user_service";
@@ -9,6 +8,7 @@ import { NewDuoBody } from "../types/types_body/new_duo_body";
 import { DamageDuoBody } from "../types/types_body/damage_duo_body";
 import { SetStageBody } from "../types/types_body/set_stage_body";
 import { RecoveryDuoBody } from "../types/types_body/recovery_duo_body";
+import db from "../../database/db";
 
 
 const routerDuo = Router();
@@ -16,7 +16,6 @@ const routerDuo = Router();
 
 routerDuo.post("/new_duo", async (req: Request, res: Response ) =>{
     const data: NewDuoBody = req.body;
-    const db = await initDB();
     const duo_service = new DuoService(db);
 
     if (!data) {
@@ -40,14 +39,11 @@ routerDuo.post("/new_duo", async (req: Request, res: Response ) =>{
 
 routerDuo.post("/damage_duo", async (req: Request, res: Response) => {
     const data: DamageDuoBody = req.body;
-    const db = await initDB();
     const duo_service = new DuoService(db);
     const user_service = new UserService(db);
-    console.log(data.owner_id)
     const user = await user_service.getUser(data.owner_id);
     const duo = await duo_service.getDuo(data.owner_id);
     
-
     if (!user){
         res.status(500).send("Not user data");
         return
@@ -61,7 +57,7 @@ routerDuo.post("/damage_duo", async (req: Request, res: Response) => {
     let damage = 40 * user.damage;
     let feathers = 40 * user.damage;
 
-    if (duo.health - 40 < 0) {
+    if (duo?.health - 40 < 0) {
         damage = duo.health;
     } 
 
@@ -76,8 +72,6 @@ routerDuo.post("/damage_duo", async (req: Request, res: Response) => {
 
 routerDuo.post("/set_stage", async (req: Request, res: Response) => {
     const data: SetStageBody = req.body;
-    console.log("Data" + data)
-    const db = await initDB();
     const duo_service = new DuoService(db);
 
     await duo_service.setStageDuo(data.owner_id, data.new_stage);
@@ -86,7 +80,6 @@ routerDuo.post("/set_stage", async (req: Request, res: Response) => {
 
 routerDuo.post("/critical_damage", async (req: Request, res: Response) => {
     const data: CriticalDamageBody = req.body;
-    const db = await initDB();
     const duo_service = new DuoService(db);
 
     await duo_service.criticalDamageDuo(data.owner_id);
@@ -95,7 +88,6 @@ routerDuo.post("/critical_damage", async (req: Request, res: Response) => {
 })
 
 routerDuo.get("/get_all_duo", async (req: Request, res: Response) => {
-    const db = await initDB();
     const duo_service = new DuoService(db);
     const duos = await duo_service.getAllDuo();
 
@@ -110,7 +102,6 @@ routerDuo.get("/get_all_duo", async (req: Request, res: Response) => {
 
 routerDuo.post("/recovery_duo", async (req: Request, res: Response) => {
     const data: RecoveryDuoBody = req.body;
-    const db = await initDB();
     const duo_service = new DuoService(db);
     const duo = await duo_service.getDuo(data.owner_id)
 
@@ -128,10 +119,8 @@ routerDuo.post("/recovery_duo", async (req: Request, res: Response) => {
 
 routerDuo.get("/:owner_id", async (req: Request, res: Response) => {
     const owner_id = parseInt(req.params.owner_id);
-    const db = await initDB();
     const duo_service = new DuoService(db);
     const duo = await duo_service.getDuo(owner_id);
-
 
     if (!duo) {
         res.status(404).send("not found duo");

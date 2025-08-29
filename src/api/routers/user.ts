@@ -1,18 +1,17 @@
 import { Router } from "express";
 import { Request, Response } from "express";
-import { initDB } from "../database/db";
 
 import UserService from "../services/model_service/user_service";
 import { NewUserBody } from "../types/types_body/new_user_body";
 import { UpgradeDamageBody } from "../types/types_body/upgrade_damage_body";
+import db from "../../database/db";
 
 const routerUser = Router();
 
 
 
 routerUser.post("/upsert_user", async (req: Request, res: Response) => {
-    const db = await initDB(); 
-    const database_service = new UserService(db);
+    const user_service = new UserService(db);
     const data: NewUserBody = req.body;
 
     if (!data){
@@ -20,12 +19,11 @@ routerUser.post("/upsert_user", async (req: Request, res: Response) => {
         return
     }
     
-    await database_service.upsertUser(data.telegram_id, data.full_name, data.username);
+    await user_service.upsertUser(data.telegram_id, data.full_name, data.username);
     res.status(201).send("update user data");
 })
 
 routerUser.post("/upgrade_damage", async (req: Request, res: Response) => {
-    const db = await initDB();
     const user_service = new UserService(db);
     const data: UpgradeDamageBody = req.body;
     
@@ -39,7 +37,6 @@ routerUser.post("/upgrade_damage", async (req: Request, res: Response) => {
 
 
 routerUser.get("/get_top_users", async (req: Request, res: Response) => {
-    const db = await initDB();
     const user_service = new UserService(db);
     const top_users = await user_service.getTopUsersByLevel();
 
@@ -54,7 +51,6 @@ routerUser.get("/get_top_users", async (req: Request, res: Response) => {
 })
 
 routerUser.get("/:telegram_id",async (req: Request, res: Response) => {
-    const db = await initDB();
     const database_service = new UserService(db);
     const telegram_id = req.params.telegram_id as string;
     const user = await database_service.getUser(parseInt(telegram_id, 10));

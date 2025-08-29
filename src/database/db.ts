@@ -1,10 +1,21 @@
-import { open } from "sqlite";
-import sqlite3 from "sqlite3";
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres"
+import * as dotenv from 'dotenv';
 
 
-export async function initDB() {
-    return await open({
-        filename: 'database.db',
-        driver: sqlite3.Database,
-      });
-}
+dotenv.config();
+
+const DATABASE_URL = process.env.DATABASE_URL;
+
+const pool = new Pool(
+  { 
+    connectionString: DATABASE_URL
+  }
+);
+
+const db = drizzle({
+  client: pool
+});
+
+
+export default db;

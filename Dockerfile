@@ -7,4 +7,4 @@ RUN npm i
 
 EXPOSE 3001
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/api/index.js"]

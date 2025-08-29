@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class BaseService {
+exports.Repository = void 0;
+class Repository {
     constructor(database) {
         this.db = database;
     }
-    ;
 }
-;
-exports.default = BaseService;
+exports.Repository = Repository;
+exports.default = Repository;

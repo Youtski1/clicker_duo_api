@@ -13,14 +13,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const db_1 = require("../database/db");
 const duo_service_1 = __importDefault(require("../services/model_service/duo_service"));
 const user_service_1 = __importDefault(require("../services/model_service/user_service"));
+const db_1 = __importDefault(require("../../database/db"));
 const routerDuo = (0, express_1.Router)();
 routerDuo.post("/new_duo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    const db = yield (0, db_1.initDB)();
-    const duo_service = new duo_service_1.default(db);
+    const duo_service = new duo_service_1.default(db_1.default);
     if (!data) {
         res.send("not body").status(500);
         return;
@@ -37,10 +36,8 @@ routerDuo.post("/new_duo", (req, res) => __awaiter(void 0, void 0, void 0, funct
 }));
 routerDuo.post("/damage_duo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    const db = yield (0, db_1.initDB)();
-    const duo_service = new duo_service_1.default(db);
-    const user_service = new user_service_1.default(db);
-    console.log(data.owner_id);
+    const duo_service = new duo_service_1.default(db_1.default);
+    const user_service = new user_service_1.default(db_1.default);
     const user = yield user_service.getUser(data.owner_id);
     const duo = yield duo_service.getDuo(data.owner_id);
     if (!user) {
@@ -53,7 +50,7 @@ routerDuo.post("/damage_duo", (req, res) => __awaiter(void 0, void 0, void 0, fu
     }
     let damage = 40 * user.damage;
     let feathers = 40 * user.damage;
-    if (duo.health - 40 < 0) {
+    if ((duo === null || duo === void 0 ? void 0 : duo.health) - 40 < 0) {
         damage = duo.health;
     }
     if (duo.stage == 6) {
@@ -65,22 +62,18 @@ routerDuo.post("/damage_duo", (req, res) => __awaiter(void 0, void 0, void 0, fu
 }));
 routerDuo.post("/set_stage", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    console.log("Data" + data);
-    const db = yield (0, db_1.initDB)();
-    const duo_service = new duo_service_1.default(db);
+    const duo_service = new duo_service_1.default(db_1.default);
     yield duo_service.setStageDuo(data.owner_id, data.new_stage);
     res.status(200).send("successfully set stage duo");
 }));
 routerDuo.post("/critical_damage", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    const db = yield (0, db_1.initDB)();
-    const duo_service = new duo_service_1.default(db);
+    const duo_service = new duo_service_1.default(db_1.default);
     yield duo_service.criticalDamageDuo(data.owner_id);
     res.status(200).send("successfully critical damage duo");
 }));
 routerDuo.get("/get_all_duo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const db = yield (0, db_1.initDB)();
-    const duo_service = new duo_service_1.default(db);
+    const duo_service = new duo_service_1.default(db_1.default);
     const duos = yield duo_service.getAllDuo();
     if (!duos) {
         res.status(404).send("Not found data all duo");
@@ -90,8 +83,7 @@ routerDuo.get("/get_all_duo", (req, res) => __awaiter(void 0, void 0, void 0, fu
 }));
 routerDuo.post("/recovery_duo", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const data = req.body;
-    const db = yield (0, db_1.initDB)();
-    const duo_service = new duo_service_1.default(db);
+    const duo_service = new duo_service_1.default(db_1.default);
     const duo = yield duo_service.getDuo(data.owner_id);
     if (!duo) {
         res.status(404).send("Not found data duo");
@@ -103,8 +95,7 @@ routerDuo.post("/recovery_duo", (req, res) => __awaiter(void 0, void 0, void 0, 
 }));
 routerDuo.get("/:owner_id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const owner_id = parseInt(req.params.owner_id);
-    const db = yield (0, db_1.initDB)();
-    const duo_service = new duo_service_1.default(db);
+    const duo_service = new duo_service_1.default(db_1.default);
     const duo = yield duo_service.getDuo(owner_id);
     if (!duo) {
         res.status(404).send("not found duo");

@@ -68,4 +68,4 @@ class ValidateService {
   }
         
 }
-export default ValidateService
+export default ValidateService;''

@@ -16,66 +16,37 @@ const service_1 = __importDefault(require("../service"));
 class DuoService extends service_1.default {
     insertDuo(owner_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run(`
-            INSERT INTO duos(
-                owner_id
-            )
-            VALUES(?)
-        `, [owner_id]);
+            yield this.duoRepository.insert(owner_id);
         });
     }
     getDuo(owner_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const duo = yield this.db.get(`
-            SELECT *
-            FROM duos
-            WHERE owner_id = ?   
-        `, [owner_id]);
-            if (!duo)
-                return null;
-            return duo;
+            return yield this.duoRepository.getData(owner_id);
         });
     }
     damageDuo(owner_id, damage) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run(`
-            UPDATE duos
-            SET health = health - ?
-            WHERE owner_id = ?
-        `, [damage, owner_id]);
+            return yield this.duoRepository.getData(owner_id);
         });
     }
     setStageDuo(owner_id, new_stage) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run(`
-            UPDATE duos
-            SET stage = ?
-            WHERE owner_id = ?
-        `, [new_stage, owner_id]);
+            yield this.duoRepository.setStage(owner_id, new_stage);
         });
     }
     criticalDamageDuo(owner_id) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run(`
-            UPDATE duos
-            SET recovery_time = STRFTIME('%Y-%m-%d %H:%M:%S', DATETIME('now', 'localtime', '+6 hours')), stage = 7
-            WHERE owner_id = ?
-        `, [owner_id]);
+            yield this.duoRepository.criticalDamage(owner_id);
         });
     }
     getAllDuo() {
         return __awaiter(this, void 0, void 0, function* () {
-            const duos = yield this.db.all(`SELECT * FROM duos`);
-            return duos;
+            return yield this.duoRepository.getAllDuo();
         });
     }
     recoveryDuo(owner_id, new_health) {
         return __awaiter(this, void 0, void 0, function* () {
-            yield this.db.run(`
-            UPDATE duos
-            SET level = level + 1, health = ?, stage = 1, recovery_time = NULL
-            WHERE owner_id = ?
-        `, [new_health, owner_id]);
+            yield this.duoRepository.recovery(owner_id, new_health);
         });
     }
 }

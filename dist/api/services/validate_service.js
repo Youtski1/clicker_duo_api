@@ -68,3 +68,4 @@ class ValidateService {
     }
 }
 exports.default = ValidateService;
+'';
