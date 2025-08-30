@@ -15,7 +15,10 @@ class DuoService extends BaseService {
         owner_id: number,
         damage: number
     ) {
-        return await this.duoRepository.getData(owner_id);
+        return await this.duoRepository.damageDuo(
+            owner_id,
+            damage
+        );
     }
 
     async setStageDuo(

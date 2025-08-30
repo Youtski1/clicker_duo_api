@@ -33,6 +33,15 @@ class DuoRepository extends repository_1.default {
             });
         });
     }
+    damageDuo(owner_id, damage) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.db.update(duo_1.default)
+                .set({
+                health: (0, drizzle_orm_1.sql) `${duo_1.default.health} - ${damage}`
+            })
+                .where((0, drizzle_orm_1.eq)(duo_1.default.owner_id, owner_id));
+        });
+    }
     setStage(owner_id, new_stage) {
         return __awaiter(this, void 0, void 0, function* () {
             yield this.db.update(duo_1.default)

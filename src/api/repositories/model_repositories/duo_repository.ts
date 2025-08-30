@@ -23,6 +23,19 @@ class DuoRepository extends Repository {
         });
     }
 
+    async damageDuo(
+        owner_id: number,
+        damage: number
+    ) {
+        await this.db.update(Duo)
+        .set({
+            health: sql`${Duo.health} - ${damage}`
+        })
+        .where(
+            eq(Duo.owner_id, owner_id)
+        )
+    }
+
     async setStage(
         owner_id: number,
         new_stage: number

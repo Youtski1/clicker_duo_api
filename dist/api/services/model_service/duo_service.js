@@ -26,7 +26,7 @@ class DuoService extends service_1.default {
     }
     damageDuo(owner_id, damage) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield this.duoRepository.getData(owner_id);
+            return yield this.duoRepository.damageDuo(owner_id, damage);
         });
     }
     setStageDuo(owner_id, new_stage) {
